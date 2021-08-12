@@ -1,15 +1,15 @@
 [web]
-xxx.xxx.xxx.xxx
+xxx.xxx.xxx.xxx ansible_user=<remote_user>
 
 [automation]
-xxx.xxx.xxx.xxx
+xxx.xxx.xxx.xxx ansible_user=<remote_user>
 
 [db]
-xxx.xxx.xxx.xxx
+xxx.xxx.xxx.xxx ansible_user=<remote_user>
 
 [network]
-xxx.xxx.xxx.xxx
+xxx.xxx.xxx.xxx ansible_user=<remote_user>
 
 [infra]
-xxx.xxx.xxx.xxx
-xxx.xxx.xxx.xxx
+xxx.xxx.xxx.xxx ansible_user=<remote_user>
+xxx.xxx.xxx.xxx ansible_user=<remote_user>
