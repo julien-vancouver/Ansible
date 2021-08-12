@@ -1,11 +1,10 @@
 ---
 - hosts: all
-  vars:
-    remote_user: <user_name>
+  remote_user: <user_name>
   tasks:
           # upload ssh key                
           - authorized_key:
-                  user: {{remote_user}}
+                  user: <user_name>
                   state: present
                   manage_dir: yes
-                  key: "{{ lookup('file', '/home/{{remote_user}}/.ssh/id_rsa.pub') }}"
+                  key: "{{ lookup('file', '/home/<user_name>/.ssh/id_rsa.pub') }}"
