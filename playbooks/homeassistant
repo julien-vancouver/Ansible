@@ -1,0 +1,70 @@
+---
+- name: install Home Assistant
+  hosts: automation
+  become: true
+  become_user: root
+  vars:
+    loggedIN: <user_name>
+  tasks:
+    - name: install dependencies
+      apt:
+        name:
+            - network-manager
+            - apparmor-utils
+            - jq
+        state: present
+        update_cache: yes
+      register: depend_result
+    - name: reboot machine after install
+      reboot:
+        reboot_timeout: 10
+        post_reboot_delay: 180
+      when: depend_result is changed
+      register: reboot_result
+    - name: Wait for the reboot to complete if there was a change.
+      wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+      when: reboot_result is changed
+    - name: install docker & dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+    - name: Update apt and install docker-ce
+      apt:
+        update_cache: yes
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+    - name: get home assistant supervised installer script
+      get_url:
+        url: https://raw.githubusercontent.com/home-assistant/supervised-installer/master/installer.sh
+        dest: /home/{{loggedIN}}/installer.sh
+        mode: +x
+    - name: execute the install script and do not overwrite network
+      expect:
+        command: /home/{{loggedIN}}/installer.sh --machine qemux86-64
+        responses: 
+          N/y:
+            - n
+
+
+        
+        
